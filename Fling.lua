@@ -319,6 +319,12 @@ end
     espall()
     elseif k == "b" then
     unesp()
+    elseif k == "1" then
+    maxspeed = 30
+    elseif k == "2" then
+    maxspeed = 60	
+    elseif k == "3" then
+    maxspeed = 120
             
         elseif k == "x" then
             
