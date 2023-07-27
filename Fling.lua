@@ -11,6 +11,7 @@ spawn(function()
     RunService = game:GetService("RunService")
     COREGUI = game:GetService("CoreGui")
     player = game.Players.LocalPlayer
+    maxspeed = 120
 
     function getRoot(char)
         local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
@@ -230,7 +231,6 @@ end
     local deb = true
     local ctrl = {f = 0, b = 0, l = 0, r = 0}
     local lastctrl = {f = 0, b = 0, l = 0, r = 0}
-    local maxspeed = 120
     local speed = 15
      
      
