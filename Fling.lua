@@ -1,9 +1,10 @@
- 
- 
+
+
+
  
 spawn(function()
     local message = Instance.new("Message",workspace)
-    message.Text = "Loaded press z = invisfling , x = respawn, c = stop freecam, v = esp, b = unesp"
+    message.Text = "Loaded press z = invisfling , x = respawn, c = stop freecam, v = esp, b = unesp, change speed(1,2,3), tp to camera position(4)"
     wait(2)
     message:Destroy()
     end)
@@ -22,7 +23,10 @@ spawn(function()
         local mult = 10^(numDecimalPlaces or 0)
         return math.floor(num * mult + 0.5) / mult
     end
-
+    function teleport()
+        local cameraPosition = game.Workspace.CurrentCamera.CFrame.Position
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(cameraPosition)
+    end
     function ESP(plr)
     task.spawn(function()
 		for i,v in pairs(COREGUI:GetChildren()) do
@@ -149,7 +153,7 @@ end
             
     spawn(function()
     local message = Instance.new("Message",workspace)
-    message.Text = "Fe Invisible Fling By Diemiers#4209 Loaded (wait 1 seconds to load)"
+    message.Text = "FE Troll script by Propsi4(Github)"
     wait(1)
     message:Destroy()
     end)
@@ -325,6 +329,8 @@ end
     maxspeed = 60	
     elseif k == "3" then
     maxspeed = 120
+    elseif k == "4" then
+        teleport()
             
         elseif k == "x" then
             
