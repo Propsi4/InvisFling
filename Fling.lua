@@ -1,10 +1,7 @@
 
-
-
- 
 spawn(function()
     local message = Instance.new("Message",workspace)
-    message.Text = "Loaded press z = invisfling , x = respawn, c = stop freecam, v = esp, b = unesp, change speed(1,2,3), tp to camera position(4)"
+    message.Text = 
     wait(2)
     message:Destroy()
     end)
@@ -12,7 +9,16 @@ spawn(function()
     RunService = game:GetService("RunService")
     COREGUI = game:GetService("CoreGui")
     player = game.Players.LocalPlayer
-
+    flinging = false
+    
+    function randomString()
+        local length = math.random(10,20)
+        local array = {}
+        for i = 1, length do
+            array[i] = string.char(math.random(32, 126))
+        end
+        return table.concat(array)
+    end
 
     function getRoot(char)
         local rootPart = char:FindFirstChild('HumanoidRootPart') or char:FindFirstChild('Torso') or char:FindFirstChild('UpperTorso')
@@ -23,10 +29,98 @@ spawn(function()
         local mult = 10^(numDecimalPlaces or 0)
         return math.floor(num * mult + 0.5) / mult
     end
+
     function teleport()
         local cameraPosition = game.Workspace.CurrentCamera.CFrame.Position
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(cameraPosition)
     end
+
+    local Noclipping = nil
+    Clip = true
+    function noclip()
+        Clip = false
+	wait(0.1)
+	local function NoclipLoop()
+		if Clip == false and player.Character ~= nil then
+			for _, child in pairs(player.Character:GetDescendants()) do
+				if child:IsA("BasePart") and child.CanCollide == true then
+					child.CanCollide = false
+				end
+			end
+		end
+	end
+	Noclipping = RunService.Stepped:Connect(NoclipLoop)
+    end
+
+    function clip()
+        if Noclipping then
+            Noclipping:Disconnect()
+        end
+        Clip = true
+    end
+
+    function unfling()
+        clip()
+        if flingDied then
+            flingDied:Disconnect()
+        end
+        flinging = false
+        wait(.1)
+        local speakerChar = player.Character
+        if not speakerChar or not getRoot(speakerChar) then return end
+        for i,v in pairs(getRoot(speakerChar):GetChildren()) do
+            if v.ClassName == 'BodyAngularVelocity' then
+                v:Destroy()
+            end
+        end
+        for _, child in pairs(speakerChar:GetDescendants()) do
+            if child.ClassName == "Part" or child.ClassName == "MeshPart" then
+                child.CustomPhysicalProperties = PhysicalProperties.new(0.7, 0.3, 0.5)
+            end
+        end
+    end
+
+
+    function fling()
+        if flinging then
+            unfling()
+    else 
+        flinging = true
+	for _, child in pairs(player.Character:GetDescendants()) do
+		if child:IsA("BasePart") then
+			child.CustomPhysicalProperties = PhysicalProperties.new(math.huge, 0.3, 0.5)
+		end
+	end
+    noclip()
+	wait(.1)
+	local bambam = Instance.new("BodyAngularVelocity")
+	bambam.Name = randomString()
+	bambam.Parent = getRoot(player.Character)
+	bambam.AngularVelocity = Vector3.new(0,99999,0)
+	bambam.MaxTorque = Vector3.new(0,math.huge,0)
+	bambam.P = math.huge
+	local Char = player.Character:GetChildren()
+	for i, v in next, Char do
+		if v:IsA("BasePart") then
+			v.CanCollide = false
+			v.Massless = true
+			v.Velocity = Vector3.new(0, 0, 0)
+		end
+	end
+	flinging = true
+	local function flingDiedF()
+		unfling()
+	end
+	flingDied = player.Character:FindFirstChildOfClass('Humanoid').Died:Connect(flingDiedF)
+	repeat
+		bambam.AngularVelocity = Vector3.new(0,99999,0)
+		wait(.2)
+		bambam.AngularVelocity = Vector3.new(0,0,0)
+		wait(.1)
+	until flinging == false
+end
+end
+
     function ESP(plr)
     task.spawn(function()
 		for i,v in pairs(COREGUI:GetChildren()) do
@@ -153,8 +247,8 @@ end
             
     spawn(function()
     local message = Instance.new("Message",workspace)
-    message.Text = "FE Troll script by Propsi4(Github)"
-    wait(1)
+    message.Text = "Loaded press f = noclip, z = invisfling , x = fling, c = respawn, v = stop freecam, b = esp, n = unesp, change speed(1,2,3), tp to camera position(4)"
+    wait(2)
     message:Destroy()
     end)
      
@@ -317,11 +411,11 @@ end
     end)
     Fly()
      
-    elseif k == "c" then 
+    elseif k == "v" then 
     StopFreecam()
-    elseif k == "v" then
-    espall()
     elseif k == "b" then
+    espall()
+    elseif k == "n" then
     unesp()
     elseif k == "1" then
     maxspeed = 30
@@ -329,15 +423,23 @@ end
     maxspeed = 60	
     elseif k == "3" then
     maxspeed = 120
+    elseif k == "x" then
+        fling()
+    elseif k == "f" then
+        if Clip then 
+            noclip()
+        else
+            clip()
+        end
     elseif k == "4" then
         teleport()
             
-        elseif k == "x" then
+        elseif k == "c" then
             
             
             spawn(function()
     local message = Instance.new("Message",workspace)
-    message.Text = "Respawning dont spam"
+    message.Text = "Respawning..."
     wait(1)
     message:Destroy()
     end)
